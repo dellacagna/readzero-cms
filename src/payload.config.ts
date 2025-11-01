@@ -13,6 +13,9 @@ import { Media } from './collections/Media'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+import { Arcs } from './collections/Arcs'
+import { Chapters } from './collections/Chapters'
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -20,7 +23,20 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
+  localization: {
+    locales: [
+      { code: 'ja', label: 'Japanese' },
+      { code: 'en', label: 'English' },
+      { code: 'de', label: 'Deutsch' },
+      { code: 'fr', label: 'Français' },
+      { code: 'it', label: 'Italiano' },
+      { code: 'es', label: 'Español' },
+      { code: 'pt', label: 'Português' },
+    ],
+    defaultLocale: 'en',
+    fallback: true,
+  },
+  collections: [Users, Media, Arcs, Chapters],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

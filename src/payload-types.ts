@@ -69,6 +69,8 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    arcs: Arc;
+    chapters: Chapter;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -77,6 +79,8 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    arcs: ArcsSelect<false> | ArcsSelect<true>;
+    chapters: ChaptersSelect<false> | ChaptersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -86,7 +90,7 @@ export interface Config {
   };
   globals: {};
   globalsSelect: {};
-  locale: null;
+  locale: 'ja' | 'en' | 'de' | 'fr' | 'it' | 'es' | 'pt';
   user: User & {
     collection: 'users';
   };
@@ -121,6 +125,9 @@ export interface User {
   id: string;
   updatedAt: string;
   createdAt: string;
+  enableAPIKey?: boolean | null;
+  apiKey?: string | null;
+  apiKeyIndex?: string | null;
   email: string;
   resetPasswordToken?: string | null;
   resetPasswordExpiration?: string | null;
@@ -158,6 +165,41 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "arcs".
+ */
+export interface Arc {
+  id: string;
+  title: string;
+  slug: string;
+  description?: string | null;
+  thumbnail?: (string | null) | Media;
+  order?: number | null;
+  scrapeIndex?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "chapters".
+ */
+export interface Chapter {
+  id: string;
+  arc: string | Arc;
+  title: string;
+  slug: string;
+  content?: string | null;
+  description?: string | null;
+  thumbnail?: (string | null) | Media;
+  order?: number | null;
+  publishedAt?: string | null;
+  revisionAt?: string | null;
+  scrapeIndex?: string | null;
+  sourceUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -170,6 +212,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'arcs';
+        value: string | Arc;
+      } | null)
+    | ({
+        relationTo: 'chapters';
+        value: string | Chapter;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -220,6 +270,9 @@ export interface PayloadMigration {
 export interface UsersSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
+  enableAPIKey?: T;
+  apiKey?: T;
+  apiKeyIndex?: T;
   email?: T;
   resetPasswordToken?: T;
   resetPasswordExpiration?: T;
@@ -252,6 +305,39 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "arcs_select".
+ */
+export interface ArcsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  thumbnail?: T;
+  order?: T;
+  scrapeIndex?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "chapters_select".
+ */
+export interface ChaptersSelect<T extends boolean = true> {
+  arc?: T;
+  title?: T;
+  slug?: T;
+  content?: T;
+  description?: T;
+  thumbnail?: T;
+  order?: T;
+  publishedAt?: T;
+  revisionAt?: T;
+  scrapeIndex?: T;
+  sourceUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
